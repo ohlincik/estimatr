@@ -12,9 +12,72 @@
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="app.css">
 </head>
-<body>
+<body ng-controller="EstimatrController as eCtrl">
   <div class="container">
     <h1>Estimatr</h1>
+    <h2>{{ quote.customer }}</h2>
+    <h3>
+      <small>Hourly rate:</small> {{ quote.rate | currency }}
+      |
+      <small>PM ratio:</small> {{ quote.pm_ratio * 100 | number : 0 }}%
+    </h3>
+
+    <section ng-repeat="section in quote.sections">
+      <h3>
+        <button type="button" class="btn btn-danger btn-xs">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        {{ section.title }}
+      </h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th class="text-right">Hours</th>
+            <th class="text-right">Amount</th>
+            <th>&nbsp;</th>
+          </tr>  
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in section.items">
+            <td>
+              <input type="text" class="form-control" size="3" value="item.title" ng-model="item.title">
+            </td>
+            <td class="text-right">
+              <input type="text" class="form-control" size="3" value="item.hours" ng-model="item.hours">
+            </td>
+            <td class="text-right">{{ item.hours * quote.rate | currency }}</td>
+            <td>
+              <button type="button" class="btn btn-danger btn-xs">
+                <span class="glyphicon glyphicon-remove"></span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th>Subtotal:</th>
+            <td>{{ section.hours }}</td>
+            <td>{{ section.hours * quote.rate | currency }}</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <th>PM Total:</th>
+            <td>{{ section.hours * quote.pm_ratio }}</td>
+            <td>{{ (section.hours * quote.pm_ratio) * quote.rate | currency }}</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <th>Total:</th>
+            <td>{{ (section.hours + (section.hours * quote.pm_ratio)) }}</td>
+            <td>{{ (section.hours + (section.hours * quote.pm_ratio)) * quote.rate | currency }}</td>
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-default">Add Item</button>
+    </section>
+    <hr>
+    <button class="btn btn-default">Add Section</button>
+
   </div>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
