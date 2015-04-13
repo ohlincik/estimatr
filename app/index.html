@@ -22,7 +22,10 @@
       <small>PM ratio:</small> {{ quote.pm_ratio * 100 | number : 0 }}%
     </h3>
 
-    <p>Project hours: {{ sumProjectHours() }}</p>
+    <p>Project Subtotal - hours: {{ projectHoursSubtotal() | number:2 }} | amount: {{ projectSubtotal() | currency }}</p>
+    <p>Project PM - hours: {{ projectPmHours() | number:2 }} | amount: {{ projectPmTotal() | currency }}</p>
+    <p>Project Total - hours: {{ projectHoursTotal() | number:2 }} | amount: {{ projectTotal() | currency }}</p>
+
 
     <section ng-repeat="section in quote.sections">
       <h3>
@@ -57,19 +60,19 @@
           </tr>
           <tr>
             <th>Subtotal:</th>
-            <td>{{ section.hours }}</td>
+            <td>{{ section.hours | number:2 }}</td>
             <td>{{ sectionSubtotal(section) | currency }}</td>
             <td>&nbsp;</td>
           </tr>
           <tr>
             <th>PM Total:</th>
-            <td>{{ sectionPmHours(section) }}</td>
+            <td>{{ sectionPmHours(section) | number:2 }}</td>
             <td>{{ sectionPmTotal(section) | currency }}</td>
             <td>&nbsp;</td>
           </tr>
           <tr>
             <th>Total:</th>
-            <td>{{ sectionTotalHours(section) }}</td>
+            <td>{{ sectionTotalHours(section) | number:2 }}</td>
             <td>{{ sectionTotal(section) | currency }}</td>
             <td>&nbsp;</td>
           </tr>

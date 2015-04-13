@@ -98,12 +98,32 @@ app.controller('EstimatrController', function($scope) {
 
   // Project calculations
 
-  $scope.sumProjectHours = function() {
+  $scope.projectHoursSubtotal = function() {
     var total = 0;
     $scope.quote.sections.forEach(function(section) {
       total += parseInt(section.hours);
     });
     return total;
+  }
+
+  $scope.projectPmHours = function() {
+    return $scope.projectHoursSubtotal() * $scope.quote.pm_ratio;
+  }
+
+  $scope.projectHoursTotal = function  () {
+    return $scope.projectHoursSubtotal() + $scope.projectPmHours();
+  }
+
+  $scope.projectSubtotal = function() {
+    return $scope.projectHoursSubtotal() * $scope.quote.rate;
+  }
+
+  $scope.projectPmTotal = function() {
+    return $scope.projectPmHours() * $scope.quote.rate;
+  }
+
+  $scope.projectTotal = function() {
+    return $scope.projectHoursTotal() * $scope.quote.rate;
   }
 
 });
