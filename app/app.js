@@ -48,7 +48,7 @@ app.controller('EstimatrController', function($scope) {
       total += hours;
     });
     section.hours = total;
-  };
+  }
 
   $scope.sumProjectHours = function() {
     var total = 0;
@@ -56,6 +56,16 @@ app.controller('EstimatrController', function($scope) {
       total += parseInt(section.hours);
     });
     return total;
-  };
+  }
+
+  $scope.addItem = function(section) {
+    var new_item = { title: 'New Item', hours: 0 };
+    section.items.push(new_item);
+  }
+
+  $scope.removeItem = function(section, item) {
+    var index = section.items.indexOf(item);
+    section.items.splice(index, 1);
+  }
 
 });

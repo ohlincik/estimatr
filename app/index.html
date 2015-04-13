@@ -50,7 +50,7 @@
             </td>
             <td class="text-right">{{ item.hours * quote.rate | currency }}</td>
             <td>
-              <button type="button" class="btn btn-danger btn-xs">
+              <button type="button" class="btn btn-danger btn-xs" ng-click="removeItem(section, item)">
                 <span class="glyphicon glyphicon-remove"></span>
               </button>
             </td>
@@ -75,7 +75,7 @@
           </tr>
         </tbody>
       </table>
-      <button class="btn btn-default">Add Item</button>
+      <button class="btn btn-default" ng-click="addItem(section)">Add Item</button>
     </section>
     <hr>
     <button class="btn btn-default">Add Section</button>
