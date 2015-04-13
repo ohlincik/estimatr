@@ -58,19 +58,19 @@
           <tr>
             <th>Subtotal:</th>
             <td>{{ section.hours }}</td>
-            <td>{{ section.hours * quote.rate | currency }}</td>
+            <td>{{ sectionSubtotal(section) | currency }}</td>
             <td>&nbsp;</td>
           </tr>
           <tr>
             <th>PM Total:</th>
-            <td>{{ section.hours * quote.pm_ratio }}</td>
-            <td>{{ (section.hours * quote.pm_ratio) * quote.rate | currency }}</td>
+            <td>{{ sectionPmHours(section) }}</td>
+            <td>{{ sectionPmTotal(section) | currency }}</td>
             <td>&nbsp;</td>
           </tr>
           <tr>
             <th>Total:</th>
-            <td>{{ (section.hours + (section.hours * quote.pm_ratio)) }}</td>
-            <td>{{ (section.hours + (section.hours * quote.pm_ratio)) * quote.rate | currency }}</td>
+            <td>{{ sectionTotalHours(section) }}</td>
+            <td>{{ sectionTotal(section) | currency }}</td>
             <td>&nbsp;</td>
           </tr>
         </tbody>

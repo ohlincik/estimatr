@@ -41,23 +41,6 @@ app.controller('EstimatrController', function($scope) {
 
   $scope.quote = seed_quote;
 
-  $scope.sumSectionHours = function(section) {
-    var total = 0;
-    section.items.forEach(function(item) {
-      hours = isNaN(parseInt(item.hours)) ? 0 : parseInt(item.hours);
-      total += hours;
-    });
-    section.hours = total;
-  }
-
-  $scope.sumProjectHours = function() {
-    var total = 0;
-    $scope.quote.sections.forEach(function(section) {
-      total += parseInt(section.hours);
-    });
-    return total;
-  }
-
   $scope.addItem = function(section) {
     var new_item = { title: 'New Item', hours: 0 };
     section.items.push(new_item);
@@ -78,6 +61,49 @@ app.controller('EstimatrController', function($scope) {
   $scope.removeSection = function(section) {
     var index = $scope.quote.sections.indexOf(section);
     $scope.quote.sections.splice(index,1);
+  }
+
+  // Section hours calculations
+
+  $scope.sumSectionHours = function(section) {
+    var total = 0;
+    section.items.forEach(function(item) {
+      hours = isNaN(parseInt(item.hours)) ? 0 : parseInt(item.hours);
+      total += hours;
+    });
+    section.hours = total;
+  }
+
+  $scope.sectionPmHours = function(section) {
+    return section.hours * $scope.quote.pm_ratio;
+  }
+
+  $scope.sectionTotalHours = function(section) {
+    return section.hours + $scope.sectionPmHours(section);
+  }
+
+  // Section totals calculations
+
+  $scope.sectionSubtotal = function(section) {
+    return section.hours * $scope.quote.rate;
+  }
+
+  $scope.sectionPmTotal = function(section) {
+    return $scope.sectionPmHours(section) * $scope.quote.rate;
+  }
+
+  $scope.sectionTotal = function(section) {
+    return $scope.sectionTotalHours(section) * $scope.quote.rate;
+  }
+
+  // Project calculations
+
+  $scope.sumProjectHours = function() {
+    var total = 0;
+    $scope.quote.sections.forEach(function(section) {
+      total += parseInt(section.hours);
+    });
+    return total;
   }
 
 });
