@@ -2,7 +2,7 @@ var seed_quote = {
   title: 'Project',
   customer: 'Customer',
   rate: 100,
-  pm_ratio: 0.2,
+  pm_percent: 20,
   sections: [
     {
       title: 'Section 1',
@@ -40,6 +40,22 @@ var app = angular.module('estimatr', []);
 app.controller('EstimatrController', function($scope) {
 
   $scope.quote = seed_quote;
+  $scope.quote.pm_ratio = ($scope.quote.pm_percent / 100);
+
+  // Quote settings
+
+  $scope.adjustRate = function() {
+    var rate = prompt("Hourly Rate ($)", $scope.quote.rate);
+    $scope.quote.rate = rate;
+  }
+
+  $scope.adjustPmPercent = function() {
+    var pm_percent = prompt("PM Ration (%)", $scope.quote.pm_percent);
+    $scope.quote.pm_percent = pm_percent;
+    $scope.quote.pm_ratio = ($scope.quote.pm_percent / 100);
+  }
+
+  // Quote content manipulation
 
   $scope.addItem = function(section) {
     var new_item = { title: 'New Item', hours: 0 };
@@ -61,6 +77,11 @@ app.controller('EstimatrController', function($scope) {
   $scope.removeSection = function(section) {
     var index = $scope.quote.sections.indexOf(section);
     $scope.quote.sections.splice(index,1);
+  }
+
+  $scope.editSectionTitle = function(section_index) {
+    var title = prompt("Section Title", $scope.quote.sections[section_index].title);
+    $scope.quote.sections[section_index].title = title;
   }
 
   // Section hours calculations

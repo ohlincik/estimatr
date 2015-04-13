@@ -13,75 +13,122 @@
   <link rel="stylesheet" href="app.css">
 </head>
 <body ng-controller="EstimatrController as eCtrl">
-  <div class="container">
-    <h1>Estimatr</h1>
-    <h2>{{ quote.customer }}</h2>
-    <h3>
-      <small>Hourly rate:</small> {{ quote.rate | currency }}
-      |
-      <small>PM ratio:</small> {{ quote.pm_ratio * 100 | number : 0 }}%
-    </h3>
 
-    <p>Project Subtotal - hours: {{ projectHoursSubtotal() | number:2 }} | amount: {{ projectSubtotal() | currency }}</p>
-    <p>Project PM - hours: {{ projectPmHours() | number:2 }} | amount: {{ projectPmTotal() | currency }}</p>
-    <p>Project Total - hours: {{ projectHoursTotal() | number:2 }} | amount: {{ projectTotal() | currency }}</p>
+<!-- NAVIGATION -->
 
-
-    <section ng-repeat="section in quote.sections">
-      <h3>
-        <button type="button" class="btn btn-danger btn-xs" ng-click="removeSection(section)">
-          <span class="glyphicon glyphicon-remove"></span>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
         </button>
-        {{ section.title }}
-      </h3>
-      <table class="table">
+        <a class="navbar-brand" href="#">Estimatr</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="totals-label">
+          <span class="type">Subtotal</span>
+          <span class="hours">{{ projectHoursSubtotal() | number:2 }}</span>
+          <span class="amount">{{ projectSubtotal() | currency }}</span>
+        </div>
+        <div class="totals-label">
+          <span class="type">PM</span>
+          <span class="hours">{{ projectPmHours() | number:2 }}</span>
+          <span class="amount">{{ projectPmTotal() | currency }}</span>
+        </div>
+        <div class="totals-label">
+          <span class="type">Total</span>
+          <span class="hours">{{ projectHoursTotal() | number:2 }}</span>
+          <span class="amount">{{ projectTotal() | currency }}</span>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href ng-click="adjustRate()">Hourly: <strong>{{ quote.rate | currency }}</strong></a></li>
+              <li><a href ng-click="adjustPmPercent()">PM Ratio: <strong>{{ quote.pm_percent | number : 0 }}%</strong></a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<!-- EDITOR -->
+
+  <div class="container">
+    <div class="page-header">
+      <h1>
+        <small>{{ quote.customer }}</small>
+        {{ quote.title }}
+      </h1>  
+    </div>
+
+    <div class="panel panel-default" ng-repeat="section in quote.sections">
+      <div class="panel-heading">
+        <a href class="text-danger pull-right" ng-click="removeSection(section)">
+          <span class="glyphicon glyphicon-remove"></span>
+        </a>
+        <h3 class="panel-title"><a href ng-click="editSectionTitle($index)">{{ section.title }}</a></h3>
+      </div>
+      <table class="table table-striped section">
         <thead>
           <tr>
-            <th>Item</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
             <th class="text-right">Hours</th>
             <th class="text-right">Amount</th>
-            <th>&nbsp;</th>
           </tr>  
         </thead>
         <tbody>
           <tr ng-repeat="item in section.items">
             <td>
+              <a href class="text-danger" ng-click="removeItem(section,item)">
+                <span class="glyphicon glyphicon-remove"></span>
+              </a>
+            </td>
+            <td class="item">
               <input type="text" class="form-control" size="3" value="item.title" ng-model="item.title">
             </td>
-            <td class="text-right">
+            <td class="hours">
               <input type="text" class="form-control" size="3" value="item.hours" ng-model="item.hours" ng-change="sumSectionHours(section)">
             </td>
-            <td class="text-right">{{ item.hours * quote.rate | currency }}</td>
-            <td>
-              <button type="button" class="btn btn-danger btn-xs" ng-click="removeItem(section, item)">
-                <span class="glyphicon glyphicon-remove"></span>
-              </button>
+            <td class="amount">{{ item.hours * quote.rate | currency }}</td>
+          </tr>
+          <tr class="add-item">
+            <th>&nbsp;</th>
+            <td colspan="3">
+              <a href ng-click="addItem(section)">+ add item</a>
             </td>
           </tr>
-          <tr>
-            <th>Subtotal:</th>
-            <td>{{ section.hours | number:2 }}</td>
-            <td>{{ sectionSubtotal(section) | currency }}</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <th>PM Total:</th>
-            <td>{{ sectionPmHours(section) | number:2 }}</td>
-            <td>{{ sectionPmTotal(section) | currency }}</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <th>Total:</th>
-            <td>{{ sectionTotalHours(section) | number:2 }}</td>
-            <td>{{ sectionTotal(section) | currency }}</td>
-            <td>&nbsp;</td>
-          </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>&nbsp;</td>
+            <th>Subtotal</th>
+            <td class="hours">{{ section.hours | number:2 }}</td>
+            <td class="amount">{{ sectionSubtotal(section) | currency }}</td>
+          </tr>
+          <tr class="pm-total">
+            <td>&nbsp;</td>
+            <th>PM Total</th>
+            <td class="hours">{{ sectionPmHours(section) | number:2 }}</td>
+            <td class="amount">{{ sectionPmTotal(section) | currency }}</td>
+          </tr>
+          <tr class="total">
+            <td>&nbsp;</td>
+            <th>Total</th>
+            <td class="hours">{{ sectionTotalHours(section) | number:2 }}</td>
+            <td class="amount">{{ sectionTotal(section) | currency }}</td>
+          </tr>
+        </tfoot>
       </table>
-      <button class="btn btn-default" ng-click="addItem(section)">Add Item</button>
-    </section>
-    <hr>
-    <button class="btn btn-default" ng-click="addSection()">Add Section</button>
+    </div>
+    <button class="btn btn-default btn-sm" ng-click="addSection()"><span class="glyphicon glyphicon-plus"></span> Section</button>
+  </div>
 
   </div>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>

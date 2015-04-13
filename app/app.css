@@ -1,30 +1,113 @@
 /* app css stylesheet */
 
-.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+body { padding-top: 60px; }
+
+.page-header {
+  margin: 10px 0px 20px;
 }
 
-.menu:before {
-  content: "[";
+.alert .btn-group {
+  margin-top: -4px;
 }
 
-.menu:after {
-  content: "]";
+div.totals-label {
+  display: inline-block;
+  float: left;
+  margin: 12px 7px 10px;
 }
 
-.menu > li {
-  display: inline;
+div.totals-label span.type {
+  display: inline-block;
+  float: left;
+  padding: 4px 8px;
+  border-radius: 4px 0 0 4px;
+  background-color: #888;
+  color: #eee;
+  text-transform: uppercase;
 }
 
-.menu > li:before {
-  content: "|";
-  padding-right: 0.3em;
+div.totals-label span.hours {
+  display: inline-block;
+  float: left;
+  padding: 4px 7px;
+  background-color: #ddd;
+  border-right: 1px solid #ccc;
 }
 
-.menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
+div.totals-label span.amount {
+  display: inline-block;
+  float: left;
+  padding: 4px 7px;
+  border-radius: 0 4px 4px 0;
+  background-color: #e8e8e8;
+}
+
+table.table.section tr td {
+  padding: 6px;
+  vertical-align: middle;
+}
+
+table.table.section thead tr th {
+  font-variant: small-caps;
+  font-size: 90%;
+  color: #666;
+  background-color: #ddd;
+  padding: 2px 6px;
+}
+
+table.table.section .form-control {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  padding: 4px;
+  line-height: 1;
+  height: 28px;
+}
+
+table.table.section tr td.hours .form-control {
+  text-align: center;
+}
+
+table.table.section .form-control:hover {
+  background-color: #eee;
+}
+
+table.table.section .form-control:focus {
+  background-color: #eee;
+}
+
+table.table.section tr td.item {
+  width: 82%;
+}
+
+table.table.section tr td.hours {
+  width: 5%;
+}
+
+table.table.section tfoot tr td.hours {
+  text-align: right;
+}
+
+table.table.section tr td.amount {
+  width: 10%;
+  text-align: right;
+}
+
+table.table.section tr.add-item td, table.table.section tr.add-item th {
+  padding: 2px;
+  font-size: 12px;
+  font-variant: small-caps;
+}
+
+table.table.section tfoot tr th {
+  text-align: right;
+}
+
+table.table.section tr.total td, table.table.section tr.total th {
+  background-color: #333;
+  color: #eee;
+}
+
+table.table.section tr.pm-total td, table.table.section tr.pm-total th {
+  color: #777;
 }
