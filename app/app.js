@@ -41,4 +41,21 @@ app.controller('EstimatrController', function($scope) {
 
   $scope.quote = seed_quote;
 
+  $scope.sumSectionHours = function(section) {
+    var total = 0;
+    section.items.forEach(function(item) {
+      hours = isNaN(parseInt(item.hours)) ? 0 : parseInt(item.hours);
+      total += hours;
+    });
+    section.hours = total;
+  };
+
+  $scope.sumProjectHours = function() {
+    var total = 0;
+    $scope.quote.sections.forEach(function(section) {
+      total += parseInt(section.hours);
+    });
+    return total;
+  };
+
 });

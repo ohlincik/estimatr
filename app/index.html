@@ -22,6 +22,8 @@
       <small>PM ratio:</small> {{ quote.pm_ratio * 100 | number : 0 }}%
     </h3>
 
+    <p>Project hours: {{ sumProjectHours() }}</p>
+
     <section ng-repeat="section in quote.sections">
       <h3>
         <button type="button" class="btn btn-danger btn-xs">
@@ -44,7 +46,7 @@
               <input type="text" class="form-control" size="3" value="item.title" ng-model="item.title">
             </td>
             <td class="text-right">
-              <input type="text" class="form-control" size="3" value="item.hours" ng-model="item.hours">
+              <input type="text" class="form-control" size="3" value="item.hours" ng-model="item.hours" ng-change="sumSectionHours(section)">
             </td>
             <td class="text-right">{{ item.hours * quote.rate | currency }}</td>
             <td>
