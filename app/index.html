@@ -26,7 +26,7 @@
 
     <section ng-repeat="section in quote.sections">
       <h3>
-        <button type="button" class="btn btn-danger btn-xs">
+        <button type="button" class="btn btn-danger btn-xs" ng-click="removeSection(section)">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
         {{ section.title }}
@@ -78,7 +78,7 @@
       <button class="btn btn-default" ng-click="addItem(section)">Add Item</button>
     </section>
     <hr>
-    <button class="btn btn-default">Add Section</button>
+    <button class="btn btn-default" ng-click="addSection()">Add Section</button>
 
   </div>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>

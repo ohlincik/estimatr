@@ -68,4 +68,16 @@ app.controller('EstimatrController', function($scope) {
     section.items.splice(index, 1);
   }
 
+  $scope.addSection = function() {
+    var title = prompt("New Section Title");
+    var new_section = { title: title, hours: 0, items: [] };
+    $scope.addItem(new_section);
+    $scope.quote.sections.push(new_section);
+  }
+
+  $scope.removeSection = function(section) {
+    var index = $scope.quote.sections.indexOf(section);
+    $scope.quote.sections.splice(index,1);
+  }
+
 });
