@@ -29,41 +29,72 @@
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <div class="totals-label">
-          <span class="type">Subtotal</span>
-          <span class="hours">{{ projectHoursSubtotal() | number:2 }}</span>
-          <span class="amount">{{ projectSubtotal() | currency }}</span>
-        </div>
-        <div class="totals-label">
-          <span class="type">PM</span>
-          <span class="hours">{{ projectPmHours() | number:2 }}</span>
-          <span class="amount">{{ projectPmTotal() | currency }}</span>
-        </div>
-        <div class="totals-label">
-          <span class="type">Total</span>
-          <span class="hours">{{ projectHoursTotal() | number:2 }}</span>
-          <span class="amount">{{ projectTotal() | currency }}</span>
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href ng-click="adjustRate()">Hourly: <strong>{{ quote.rate | currency }}</strong></a></li>
-              <li><a href ng-click="adjustPmPercent()">PM Ratio: <strong>{{ quote.pm_percent | number : 0 }}%</strong></a></li>
+        <div ng-show="activeQuote">
+            <div class="totals-label">
+              <span class="type">Subtotal</span>
+              <span class="hours">{{ projectHoursSubtotal() | number:2 }}</span>
+              <span class="amount">{{ projectSubtotal() | currency }}</span>
+            </div>
+            <div class="totals-label">
+              <span class="type">PM</span>
+              <span class="hours">{{ projectPmHours() | number:2 }}</span>
+              <span class="amount">{{ projectPmTotal() | currency }}</span>
+            </div>
+            <div class="totals-label">
+              <span class="type">Total</span>
+              <span class="hours">{{ projectHoursTotal() | number:2 }}</span>
+              <span class="amount">{{ projectTotal() | currency }}</span>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href ng-click="adjustRate()">Hourly: <strong>{{ quote.rate | currency }}</strong></a></li>
+                  <li><a href ng-click="adjustPmPercent()">PM Ratio: <strong>{{ quote.pm_percent | number : 0 }}%</strong></a></li>
+                </ul>
+              </li>
             </ul>
-          </li>
-        </ul>
-      </div>
+          </div>
+        </div>
     </div>
   </nav>
 
-<!-- EDITOR -->
+<!-- QUOTE SELECTOR -->
 
   <div class="container">
+    <select class="form-control" ng-change="getQuote()" ng-model="currentQuote" ng-options="quote.id as quote.title for quote in availableQuotes">
+      <option value="">Select a quote to load...</option>
+    </select>
+  </div>
+  
+  <hr>
+
+<!-- EDITOR -->
+
+  <div class="container" ng-show="activeQuote">
+
+    <div class="alert alert-info" role="alert">
+      <strong>Last saved:</strong> {{ quote.updatedAt | date:'short' }}
+      &mdash;
+      <strong>Created:</strong> {{ quote.createdAt | date:'short' }}
+      <!-- Split button -->
+      <div class="btn-group pull-right">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="saveQuote()">Save</button>
+        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href ng-click="saveNewQuote()">Save as new</a></li>
+          <li><a href ng-click="deleteQuote()">Delete this quote</a></li>
+        </ul>
+      </div>
+    </div>
+
     <div class="page-header">
       <h1>
-        <small>{{ quote.customer }}</small>
-        {{ quote.title }}
+        <small ng-click="adjustCustomer()">{{ quote.customer }}</small>
+        <span ng-click="adjustTitle()">{{ quote.title }}</span>
       </h1>  
     </div>
 
@@ -135,5 +166,6 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="app.js"></script>
+  <script src="quote-service.js"></script>
 </body>
 </html>

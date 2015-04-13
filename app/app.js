@@ -1,46 +1,74 @@
-var seed_quote = {
+var blank_quote = {
   title: 'Project',
   customer: 'Customer',
-  rate: 100,
+  rate: 105,
   pm_percent: 20,
-  sections: [
-    {
-      title: 'Section 1',
-      hours: 16,
-      items: [
-        {
-          title: 'Item 11',
-          hours: 10
-        },
-        {
-          title: 'Item 12',
-          hours: 6
-        }
-      ]
-    },
-    {
-      title: 'Section 2',
-      hours: 20,
-      items: [
-        {
-          title: 'Item 21',
-          hours: 8
-        },
-        {
-          title: 'Item 22',
-          hours: 12
-        }
-      ]
-    }
-  ]
+  template: false,
+  sections: []
 };
 
 var app = angular.module('estimatr', []);
 
-app.controller('EstimatrController', function($scope) {
+app.controller('EstimatrController', function($scope, quoteService) {
 
-  $scope.quote = seed_quote;
-  $scope.quote.pm_ratio = ($scope.quote.pm_percent / 100);
+  $scope.quote = blank_quote;
+  $scope.availableQuotes = [];
+  $scope.currentQuote = '';
+  $scope.activeQuote = false;
+
+  loadAvailableQuotes();
+
+  // ---
+  // PUBLIC METHODS.
+  // ---
+
+  $scope.getQuotes = function() {
+    loadAvailableQuotes();
+  }
+
+  $scope.getQuote = function() {
+    quoteService.getQuote($scope.currentQuote)
+      .then(function(quote) {
+        $scope.quote = quote;
+        $scope.quote.pm_ratio = ($scope.quote.pm_percent / 100);
+        $scope.activeQuote = true;
+      });
+  }
+
+  $scope.saveQuote = function() {
+    if ($scope.quote.template) {
+      alert('This is a template. Please save as a new quote.');
+    } else {
+      quoteService.updateQuote($scope.currentQuote, $scope.quote)
+        .then(function(response) {
+          $scope.quote.updatedAt = response.updatedAt;
+          loadAvailableQuotes();
+      });
+    };
+  }
+
+  $scope.saveNewQuote = function() {
+    $scope.quote.template = false;
+    quoteService.createQuote($scope.quote)
+      .then(function(response) {
+        $scope.currentQuote = response.objectId;
+        loadAvailableQuotes();
+    });
+  }
+
+  $scope.deleteQuote = function() {
+    if ($scope.quote.template) {
+      alert('Sorry, it is not possible to delete a template.');
+    } else {
+      quoteService.deleteQuote($scope.currentQuote)
+        .then(function(response) {
+          $scope.currentQuote = '';
+          $scope.quote = blank_quote;
+          $scope.activeQuote = false;
+          loadAvailableQuotes();
+      });
+    };
+  }
 
   // Quote settings
 
@@ -53,6 +81,20 @@ app.controller('EstimatrController', function($scope) {
     var pm_percent = prompt("PM Ration (%)", $scope.quote.pm_percent);
     $scope.quote.pm_percent = pm_percent;
     $scope.quote.pm_ratio = ($scope.quote.pm_percent / 100);
+  }
+
+  $scope.adjustCustomer = function() {
+    var customer = prompt("Customer Name", $scope.quote.customer);
+    if (customer != null && customer.length > 0) {
+      $scope.quote.customer = customer;
+    };
+  }
+
+  $scope.adjustTitle = function() {
+    var title = prompt("Title", $scope.quote.title);
+    if (title != null && title.length > 0) {
+      $scope.quote.title = title;
+    };
   }
 
   // Quote content manipulation
@@ -145,6 +187,29 @@ app.controller('EstimatrController', function($scope) {
 
   $scope.projectTotal = function() {
     return $scope.projectHoursTotal() * $scope.quote.rate;
+  }
+
+  // ---
+  // PRIVATE METHODS
+  // ---
+
+  function loadAvailableQuotes() {
+    quoteService.getQuotes()
+      .then(function(response) {
+        var label = '';
+        var options = response.results.map(function(quote) {
+          label = quote.customer + ' - ' + quote.title
+          if (quote.template) {
+            label = '(TPL) ' + label;
+          }
+          return {
+            id: quote.objectId,
+            title: label
+          }
+      });
+
+      $scope.availableQuotes = options;
+    });
   }
 
 });
